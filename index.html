@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>César Gordillo · Acuarela · Fichas de obra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f8f6f1; --ink:#2a2a28; --muted:#77736b; --line:#dcd7cc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--paper);color:var(--ink)}
+  body{font-family:"Jost",system-ui,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+  header{padding:22px 24px 0;text-align:center}
+  .brand{font-size:11px;letter-spacing:.38em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+  main{flex:1;width:100%;max-width:640px;margin:0 auto;padding:22px 24px 32px}
+  .art{display:block;width:100%;height:auto;box-shadow:0 1px 2px rgba(0,0,0,.06),0 10px 30px rgba(60,50,30,.12);cursor:zoom-in;background:#eee}
+  .meta{text-align:center;margin-top:28px}
+  .num{font-size:11px;letter-spacing:.3em;color:var(--muted)}
+  h1{font-weight:500;font-size:19px;letter-spacing:.2em;text-transform:uppercase;margin:10px 0 6px;line-height:1.4}
+  .place{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:20px;color:#4a4740}
+  .rule{width:36px;height:1px;background:var(--line);margin:18px auto}
+  .tech{font-size:14px;letter-spacing:.06em;line-height:1.7}
+  .note{font-size:13px;letter-spacing:.04em;color:var(--muted);margin-top:6px;line-height:1.5}
+  .price{font-weight:500;font-size:16px;letter-spacing:.14em;margin-top:16px}
+  .hint{font-size:11px;letter-spacing:.12em;color:var(--muted);text-align:center;margin-top:10px}
+  footer{text-align:center;padding:22px 24px 30px;border-top:1px solid var(--line);font-size:12px;letter-spacing:.06em;color:var(--muted);line-height:1.9}
+  footer a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+  /* índice */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+  .card{text-decoration:none;color:inherit;text-align:center}
+  .card img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+  .card span{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-top:8px;line-height:1.4}
+  .intro{text-align:center;margin-bottom:26px}
+  .intro h1{font-size:22px}
+  /* zoom */
+  .zoom{position:fixed;inset:0;background:rgba(20,20,18,.96);display:none;align-items:center;justify-content:center;z-index:9;cursor:zoom-out;padding:12px}
+  .zoom.on{display:flex}
+  .zoom img{max-width:100%;max-height:100%;object-fit:contain}
+</style>
+</head>
+<body>
+<header><a class="brand" href="#">César Gordillo · Acuarela</a></header>
+<main id="view"></main>
+<footer>
+  cesargordillo.arq@gmail.com<br>
+  <a href="https://www.instagram.com/cesargordillo.watercolour/">@cesargordillo.watercolour</a>
+</footer>
+<div class="zoom" id="zoom"><img alt=""></div>
+
+<script>
+/* ===== Catálogo de obra =====
+   Cada obra tiene un id (obra-01, obra-02…) que es el que lleva su código QR. */
+const OBRAS = [
+  {
+    id:"obra-01", num:"01",
+    titulo:"La bodega de Don Pepe",
+    lugar:"Jerez de la Frontera, España",
+    anio:"2024", medidas:"76 × 56 cm", tecnica:"Acuarela sobre papel",
+    nota:"Selección Bienal Internacional de Acuarela 2024",
+    precio:"$1,200.00 USD",
+    img:"img/obra-01.jpg"
+  }
+];
+
+const view = document.getElementById('view');
+const zoom = document.getElementById('zoom');
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function ficha(o){
+  document.title = o.titulo + ' · César Gordillo';
+  view.innerHTML = `
+    <img class="art" src="${esc(o.img)}" alt="${esc(o.titulo)}, acuarela de César Gordillo">
+    <p class="hint">Toca la imagen para ampliarla</p>
+    <div class="meta">
+      <div class="num">${esc(o.num)}</div>
+      <h1>${esc(o.titulo)}</h1>
+      <div class="place">${esc(o.lugar)}</div>
+      <div class="rule"></div>
+      <div class="tech">${esc(o.anio)} · ${esc(o.medidas)} · ${esc(o.tecnica)}</div>
+      ${o.nota ? `<div class="note">${esc(o.nota)}</div>` : ''}
+      ${o.precio ? `<div class="price">${esc(o.precio)}</div>` : ''}
+    </div>`;
+  view.querySelector('.art').onclick = () => { zoom.querySelector('img').src = o.img; zoom.classList.add('on'); };
+  window.scrollTo(0,0);
+}
+
+function indice(){
+  document.title = 'César Gordillo · Acuarela · Obra 2024 – 2026';
+  view.innerHTML = `
+    <div class="intro"><h1>Acuarela</h1><div class="place">Obra 2024 – 2026</div></div>
+    <div class="grid">${OBRAS.map(o=>`
+      <a class="card" href="#${o.id}"><img src="${esc(o.img)}" alt="${esc(o.titulo)}"><span>${esc(o.num)} · ${esc(o.titulo)}</span></a>`).join('')}
+    </div>`;
+}
+
+function route(){
+  const id = location.hash.replace('#','');
+  const o = OBRAS.find(x=>x.id===id);
+  zoom.classList.remove('on');
+  o ? ficha(o) : indice();
+}
+zoom.onclick = () => zoom.classList.remove('on');
+window.addEventListener('hashchange', route);
+route();
+</script>
+</body>
+</html>
